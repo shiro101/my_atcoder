@@ -1,5 +1,28 @@
 #include<bits/stdc++.h>
 using namespace std;
+
+int ans;
+//recursive function
+void DFS(vector<int>A,int n,int m,int q,vector<int>a,vector<int>b,vector<int>c,vector<int>d){
+    // end condition
+    if(A.size()==n+1){
+        // calc score
+        int now = 0;
+        for(int i=0; i<q; i++){
+            if(A[b[i]]-A[a[i]] == c[i]) now += d[i];
+        }
+        ans = max(ans,now);
+        return;
+    }
+
+    // main procedure
+    A.push_back(A.back());
+    while(A.back() <= m){
+        DFS(A,n,m,q,a,b,c,d);
+        A.back()++;
+    }
+}
+
 int main(){
     int n,m,q;
     cin >> n >> m >> q;
@@ -10,19 +33,11 @@ int main(){
     for(int i=0; i<q; i++){
         cin >> a[i] >> b[i] >> c[i] >> d[i];
     }
-    long long sm=0;
-    vector<int> aa(n);
-    aa[0] = 1;
-    for(int i=1; i<n; i++){
-        aa[i] = 1+aa[i-1];
-    }    
-    for(int i=0; i<q; i++){
-        if(aa[b[i]]-aa[a[i]]==c[i]){
-        }else{
-            aa.erase(aa.begin() + i);
-        }
-    }
-    cout << accumulate(aa.begin(), aa.end(), 0) << endl;
+
+    // full search
+    DFS(vector<int>(1,1),n,m,q,a,b,c,d);
+    cout << ans << endl;
+    return 0;
 }
 
 
